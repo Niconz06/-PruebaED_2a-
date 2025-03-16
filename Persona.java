@@ -4,65 +4,115 @@
  */
 package instituto;
 
-/**
- *
- * @author ProfDiurno
- */
-public class Nif {
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.Objects;
 
-    private int numero;
-    private char letra;
+public class Persona implements Comparable<Persona> {
 
-    //CONSTANTE: no accesible - compartido por todo - no modificable
-    private static final char[] LETRAS
-            = {'T', 'R', 'W', 'A', 'G', 'M', 'Y', 'F', 'P', 'D',
-                'X', 'B', 'N', 'J', 'Z', 'S', 'Q', 'V', 'H', 'L',
-                'C', 'K', 'E'};
-    //saca la letra con el modulo de 23
-    private static char calcularLetra(int numero) {
-        return LETRAS[numero % 23];
+    private Nif nif;
+    private String nombre;
+    private char genero;
+    private LocalDate nacimiento;
+     /**
+     * Constructor por defecto. Inicializa los valores con datos predefinidos
+     */
+    public Persona() {
+        nif = new Nif();
+        nombre = "";
+        genero = ' ';
+        nacimiento = LocalDate.of(1990, 1, 1);
     }
-    //inicia el nif sin valores
-    protected Nif() {
-        this.numero = 0;
-        this.letra = ' ';
+    //genera el nif
+    public Persona(int nif) {
+        this();
+        this.nif = new Nif(nif);
     }
-    //calcula la letra
-    protected Nif(int numero) {
-        this.numero = numero;
-        this.letra = calcularLetra(numero);
+    //inicializa todos los atributos de la clase
+    public Persona(int nif, String nombre, char genero,
+            int dia, int mes, int ano) {
+        this.nif = new Nif(nif);
+        this.nombre = nombre;
+        this.genero = genero;
+        this.nacimiento
+                = LocalDate.of(ano, mes, dia);
     }
-    //saca el nif en formato letra+numero
+    //geter y seter
+    public Nif getNif() {
+        return nif;
+    }
+
+    public void setNif(Nif nif) {
+        this.nif = nif;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public char getGenero() {
+        return genero;
+    }
+
+    public void setGenero(char genero) {
+        this.genero = genero;
+    }
+
+    public LocalDate getNacimiento() {
+        return nacimiento;
+    }
+
+    public void setNacimiento(LocalDate nacimiento) {
+        this.nacimiento = nacimiento;
+    }
+
+    public int getEdad() {
+        return Period.between(nacimiento, LocalDate.now()).getYears();
+    }
+    // muestra la cadena de la persona, mostrando el NIF, nombre y edad
     @Override
     public String toString() {
-        return numero + "-" + letra;
+        if (nombre.split(" ").length > 1) {
+            return nif + "\t" + nombre.split(" ")[0]
+                    + '\t' + nombre.split(" ")[1] + "\t\t" + getEdad();
+        } else {
+            return nif + "\t" + nombre + "\t\t\t" + getEdad();
+        }
     }
 
-    protected void setNif(int numero) {
-        this.numero = numero;
-        this.letra = calcularLetra(numero);
+    public boolean equals(Persona a) {
+        if (a == null) {
+            return false;
+        }
+        return a.nif.toString().equals(this.nif.toString());
     }
-    //compara si los 2 nif son iguales
+    //Compara si dos objetos son iguales
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }
-        //mira si es nulo
         if (obj == null) {
             return false;
         }
-        //si esta en la misma clase
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Nif other = (Nif) obj;
-        //compara numero y letra
-        if (this.numero != other.numero) {
-            return false;
-        }
-        return this.letra == other.letra;
+        final Persona other = (Persona) obj;
+
+        return Objects.equals(this.nif, other.nif);
     }
+    //Compara esta persona con otra por su NIF
+    @Override
+    public int compareTo(Persona o) {
+        return this.nif.toString().compareTo(o.nif.toString());
+    }
+
+}
 }
 
 }
