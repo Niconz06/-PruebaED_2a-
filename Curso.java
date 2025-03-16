@@ -18,7 +18,7 @@ public class Curso {
     protected String getNombre() {
         return nombre;
     }
-
+    //inicializa el curso
     public Curso(String nombre) {
         this.nombre = nombre;
         listaAlumnos = new TreeSet<>();
@@ -29,13 +29,15 @@ public class Curso {
         String s = "--------------------" + nombre + "-----------------\n";
         s += "NumExp\tNIF\t\tNombre\t\tApellidos\n";
         s += "-------------------------------------------------\n";
+        //mete los alumnos en la lista
         for (Persona listaAlumno : listaAlumnos) {
             s += listaAlumno + "\n";
         }
         return s;
     }
-
+    //añade los alumnos al curso
     public void aniadirAlumno(Persona p) {
         listaAlumnos.add(p);
     }
 }
+
