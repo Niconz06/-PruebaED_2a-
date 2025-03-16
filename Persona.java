@@ -4,110 +4,65 @@
  */
 package instituto;
 
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.Objects;
+/**
+ *
+ * @author ProfDiurno
+ */
+public class Nif {
 
-public class Persona implements Comparable<Persona> {
+    private int numero;
+    private char letra;
 
-    private Nif nif;
-    private String nombre;
-    private char genero;
-    private LocalDate nacimiento;
-
-    public Persona() {
-        nif = new Nif();
-        nombre = "";
-        genero = ' ';
-        nacimiento = LocalDate.of(1990, 1, 1);
+    //CONSTANTE: no accesible - compartido por todo - no modificable
+    private static final char[] LETRAS
+            = {'T', 'R', 'W', 'A', 'G', 'M', 'Y', 'F', 'P', 'D',
+                'X', 'B', 'N', 'J', 'Z', 'S', 'Q', 'V', 'H', 'L',
+                'C', 'K', 'E'};
+    //saca la letra con el modulo de 23
+    private static char calcularLetra(int numero) {
+        return LETRAS[numero % 23];
     }
-
-    public Persona(int nif) {
-        this();
-        this.nif = new Nif(nif);
+    //inicia el nif sin valores
+    protected Nif() {
+        this.numero = 0;
+        this.letra = ' ';
     }
-
-    public Persona(int nif, String nombre, char genero,
-            int dia, int mes, int ano) {
-        this.nif = new Nif(nif);
-        this.nombre = nombre;
-        this.genero = genero;
-        this.nacimiento
-                = LocalDate.of(ano, mes, dia);
+    //calcula la letra
+    protected Nif(int numero) {
+        this.numero = numero;
+        this.letra = calcularLetra(numero);
     }
-
-    public Nif getNif() {
-        return nif;
-    }
-
-    public void setNif(Nif nif) {
-        this.nif = nif;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public char getGenero() {
-        return genero;
-    }
-
-    public void setGenero(char genero) {
-        this.genero = genero;
-    }
-
-    public LocalDate getNacimiento() {
-        return nacimiento;
-    }
-
-    public void setNacimiento(LocalDate nacimiento) {
-        this.nacimiento = nacimiento;
-    }
-
-    public int getEdad() {
-        return Period.between(nacimiento, LocalDate.now()).getYears();
-    }
-
+    //saca el nif en formato letra+numero
     @Override
     public String toString() {
-        if (nombre.split(" ").length > 1) {
-            return nif + "\t" + nombre.split(" ")[0]
-                    + '\t' + nombre.split(" ")[1] + "\t\t" + getEdad();
-        } else {
-            return nif + "\t" + nombre + "\t\t\t" + getEdad();
-        }
+        return numero + "-" + letra;
     }
 
-    public boolean equals(Persona a) {
-        if (a == null) {
-            return false;
-        }
-        return a.nif.toString().equals(this.nif.toString());
+    protected void setNif(int numero) {
+        this.numero = numero;
+        this.letra = calcularLetra(numero);
     }
-
+    //compara si los 2 nif son iguales
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }
+        //mira si es nulo
         if (obj == null) {
             return false;
         }
+        //si esta en la misma clase
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Persona other = (Persona) obj;
-
-        return Objects.equals(this.nif, other.nif);
+        final Nif other = (Nif) obj;
+        //compara numero y letra
+        if (this.numero != other.numero) {
+            return false;
+        }
+        return this.letra == other.letra;
     }
-
-    @Override
-    public int compareTo(Persona o) {
-        return this.nif.toString().compareTo(o.nif.toString());
-    }
+}
 
 }
